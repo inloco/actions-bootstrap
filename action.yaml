@@ -23,8 +23,8 @@ runs:
     shell: bash
     if: inputs.install-packages
     run: |
-      apt update
-      apt install -y ${{ inputs.install-packages }}
+      apt-get update
+      apt-get install -y ${{ inputs.install-packages }}
 
   - name: Installation Access Token
     id: iat
