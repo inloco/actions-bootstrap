@@ -2,12 +2,21 @@ name: Bootstrap
 description: Bootstrap workflow setup for organization repositories
 author: Incognia
 inputs:
+  install-packages:
+    description: Packages to install
     default: ''
 runs:
   using: composite
   steps:
   - name: Export environment and mask secret variables
     uses: inloco/actions-env-context@HEAD
+
+  - name: Install packages
+    shell: bash
+    if: inputs.install-packages
+    run: |
+      apt update
+      apt install -y ${{ inputs.install-packages }}
 
   - name: Installation Access Token
     id: iat
@@ -16,6 +25,7 @@ runs:
     with:
       app-id: ${{ env.GITHUB_APP_ID }}
       app-pk: ${{ env.GITHUB_APP_PK }}
+
   - name: Checkout
     uses: actions/checkout@v2
     with:
