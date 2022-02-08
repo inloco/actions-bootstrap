@@ -30,28 +30,16 @@ runs:
         echo 'EOF' >> $GITHUB_ENV
       done
 
-  - name: Clone repository with regular authentication
-    uses: actions/checkout@v2
-    if: |
-      !env.GITHUB_APP_ID || !env.GITHUB_APP_PK
-    with:
-      submodules: ${{ inputs.clone-submodules }}
-      # needed so we have the reference of the latest tag in the tree
-      fetch-depth: '0'
-
-  - name: Generate access token
-    id: access-token
+  - name: Installation Access Token
+    id: iat
     uses: inloco/actions-githubapp-installationaccesstoken@HEAD
     if: env.GITHUB_APP_ID && env.GITHUB_APP_PK
     with:
       app-id: ${{ env.GITHUB_APP_ID }}
       app-pk: ${{ env.GITHUB_APP_PK }}
-
-  - name: Clone repository with generated token for authentication
+  - name: Checkout
     uses: actions/checkout@v2
-    if: env.GITHUB_APP_ID && env.GITHUB_APP_PK
     with:
-      token: ${{ steps.access-token.outputs.instl-token }}
-      submodules: ${{ inputs.clone-submodules }}
-      # needed so we have the reference of the latest tag in the tree
-      fetch-depth: '0'
+      fetch-depth: 0
+      submodules: recursive
+      token: ${{ steps.iat.outputs.instl-token || github.token }}
