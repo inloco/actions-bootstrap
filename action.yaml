@@ -5,6 +5,14 @@ inputs:
   install-packages:
     description: Packages to install
     default: ''
+
+  setup-go:
+    description: Use inloco/actions-setup-go
+    default: ''
+
+  setup-java:
+    description: Use inloco/actions-setup-java
+    default: ''
 runs:
   using: composite
   steps:
@@ -32,3 +40,15 @@ runs:
       fetch-depth: 0
       submodules: recursive
       token: ${{ steps.iat.outputs.instl-token || github.token }}
+
+  - name: Setup Go
+    uses: inloco/actions-setup-go
+    if: inputs.setup-go
+    with:
+      go-version: ${{ inputs.setup-go }}
+
+  - name: Setup Java
+    uses: inloco/actions-setup-java
+    if: inputs.setup-java
+    with:
+      java-version: ${{ inputs.setup-java }}
