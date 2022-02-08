@@ -2,33 +2,12 @@ name: Bootstrap
 description: Bootstrap workflow setup for organization repositories
 author: Incognia
 inputs:
-  mask-variables:
-    description: Environment variables to mask (GITHUB_APP_PK and DOCKER_AUTHS already included)
     default: ''
-  clone-submodules:
-    description: Include submodules in checkout
-    default: recursive
 runs:
   using: composite
   steps:
-  - name: Mask secret variables
-    shell: bash
-    run: |
-      echo "::add-mask::GITHUB_APP_PK"
-      echo "::add-mask::DOCKER_AUTHS"
-      for VAR in ${{ inputs.mask-variables }}
-      do
-        echo "::add-mask::${!VAR}"
-      done
-
-  - name: Import host environment variables
-    shell: bash
-    run: |
-      awk 'BEGIN{for(v in ENVIRON) print v}' | while read e; do
-        echo "$e<<EOF" >> $GITHUB_ENV
-        echo "${!e}" >> $GITHUB_ENV
-        echo 'EOF' >> $GITHUB_ENV
-      done
+  - name: Export environment and mask secret variables
+    uses: inloco/actions-env-context@HEAD
 
   - name: Installation Access Token
     id: iat
