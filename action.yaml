@@ -4,15 +4,13 @@ author: Incognia
 inputs:
   install-packages:
     description: Packages to install
-    default: ''
-
+    required: false
   setup-go:
     description: Use inloco/actions-setup-go
-    default: ''
-
+    required: false
   setup-java:
     description: Use inloco/actions-setup-java
-    default: ''
+    required: false
 runs:
   using: composite
   steps:
