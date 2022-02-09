@@ -46,7 +46,7 @@ runs:
       go-version: ${{ inputs.setup-go }}
 
   - name: Setup Java
-    uses: inloco/actions-setup-java
+    uses: inloco/actions-setup-java@make-composite-action
     if: inputs.setup-java
     with:
       java-version: ${{ inputs.setup-java }}
