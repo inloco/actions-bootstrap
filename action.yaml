@@ -40,7 +40,7 @@ runs:
       token: ${{ steps.iat.outputs.instl-token || github.token }}
 
   - name: Setup Go
-    uses: inloco/actions-setup-go
+    uses: inloco/actions-setup-go@HEAD
     if: inputs.setup-go
     with:
       go-version: ${{ inputs.setup-go }}
