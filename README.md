@@ -1,2 +1,2 @@
-actions-bootstrap-and-checkout
+actions-bootstrap
 ===
