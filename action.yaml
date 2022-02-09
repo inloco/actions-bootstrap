@@ -1,0 +1,52 @@
+name: Bootstrap
+description: Bootstrap workflow setup for organization repositories
+author: Incognia
+inputs:
+  install-packages:
+    description: Packages to install
+    required: false
+  setup-go:
+    description: Use inloco/actions-setup-go
+    required: false
+  setup-java:
+    description: Use inloco/actions-setup-java
+    required: false
+runs:
+  using: composite
+  steps:
+  - name: Export environment and mask secret variables
+    uses: inloco/actions-env-context@HEAD
+
+  - name: Install packages
+    shell: bash
+    if: inputs.install-packages
+    run: |
+      apt-get update
+      apt-get install -y ${{ inputs.install-packages }}
+
+  - name: Installation Access Token
+    id: iat
+    uses: inloco/actions-githubapp-installationaccesstoken@HEAD
+    if: env.GITHUB_APP_ID && env.GITHUB_APP_PK
+    with:
+      app-id: ${{ env.GITHUB_APP_ID }}
+      app-pk: ${{ env.GITHUB_APP_PK }}
+
+  - name: Checkout
+    uses: actions/checkout@v2
+    with:
+      fetch-depth: 0
+      submodules: recursive
+      token: ${{ steps.iat.outputs.instl-token || github.token }}
+
+  - name: Setup Go
+    uses: inloco/actions-setup-go
+    if: inputs.setup-go
+    with:
+      go-version: ${{ inputs.setup-go }}
+
+  - name: Setup Java
+    uses: inloco/actions-setup-java
+    if: inputs.setup-java
+    with:
+      java-version: ${{ inputs.setup-java }}
