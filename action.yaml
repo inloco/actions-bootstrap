@@ -6,10 +6,13 @@ inputs:
     description: Packages to install
     required: false
   setup-go:
-    description: Use inloco/actions-setup-go
+    description: Go version to be passed to inloco/actions-setup-go
     required: false
   setup-java:
-    description: Use inloco/actions-setup-java
+    description: Java version to be passed to inloco/actions-setup-java
+    required: false
+  setup-node:
+    description: Node version to be passed to actions/setup-node
     required: false
 runs:
   using: composite
@@ -50,3 +53,9 @@ runs:
     if: inputs.setup-java
     with:
       java-version: ${{ inputs.setup-java }}
+
+  - name: Setup Node
+    uses: actions/setup-node@v2
+    if: inputs.setup-node
+    with:
+      node-version: ${{ inputs.setup-node }}
