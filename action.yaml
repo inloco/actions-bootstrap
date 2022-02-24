@@ -5,6 +5,9 @@ inputs:
   install-packages:
     description: Packages to install
     required: false
+  mask:
+    description: Environment variables to mask
+    required: false
   setup-go:
     description: Go version to be passed to inloco/actions-setup-go
     required: false
@@ -19,6 +22,8 @@ runs:
   steps:
   - name: Export environment and mask secret variables
     uses: inloco/actions-env-context@HEAD
+    with:
+      mask: ${{ inputs.mask }}
 
   - name: Install packages
     shell: bash
