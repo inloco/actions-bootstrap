@@ -17,6 +17,9 @@ inputs:
   setup-node:
     description: Node version to be passed to actions/setup-node
     required: false
+  setup-python:
+    description: Python version to be passed to actions/setup-python
+    required: false
 runs:
   using: composite
   steps:
@@ -64,3 +67,9 @@ runs:
     if: inputs.setup-node
     with:
       node-version: ${{ inputs.setup-node }}
+
+  - name: Setup Python
+    uses: actions/setup-python@v2
+    if: inputs.setup-python
+    with:
+      python-version: ${{ inputs.setup-python }}
