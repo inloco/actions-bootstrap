@@ -55,6 +55,7 @@ runs:
     if: inputs.setup-go
     with:
       go-version: ${{ inputs.setup-go }}
+      token: ${{ steps.iat.outputs.instl-token || github.token }}
 
   - name: Setup Java
     uses: inloco/actions-setup-java@HEAD
