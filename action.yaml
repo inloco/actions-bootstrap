@@ -72,11 +72,10 @@ runs:
       java-version: ${{ inputs.setup-java }}
 
   - name: Setup Node
-    uses: actions/setup-node@v2
+    uses: inloco/actions-setup-node@HEAD
     if: inputs.setup-node
     with:
       node-version: ${{ inputs.setup-node }}
-      check-latest: true
 
   - name: Setup Python
     uses: actions/setup-python@v2
