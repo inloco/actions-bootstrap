@@ -68,6 +68,7 @@ runs:
     if: inputs.setup-node
     with:
       node-version: ${{ inputs.setup-node }}
+      check-latest: true
 
   - name: Setup Python
     uses: actions/setup-python@v2
