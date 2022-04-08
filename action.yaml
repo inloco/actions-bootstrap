@@ -50,6 +50,10 @@ runs:
       submodules: recursive
       token: ${{ steps.iat.outputs.instl-token || github.token }}
 
+  - name: Export GIT_DESC
+    run: echo GIT_DESC="$(git describe --always --dirty --exclude '*')" >> "${GITHUB_ENV}"
+    shell: bash
+
   - name: Setup Go
     uses: inloco/actions-setup-go@HEAD
     if: inputs.setup-go
