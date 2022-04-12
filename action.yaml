@@ -50,6 +50,7 @@ runs:
       fetch-depth: 0
       submodules: recursive
       token: ${{ steps.iat.outputs.instl-token }}
+
   - name: Checkout Code without Submodules
     uses: actions/checkout@v2
     if: '! steps.iat.outputs.instl-token'
