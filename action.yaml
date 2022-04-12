@@ -20,6 +20,10 @@ inputs:
   setup-python:
     description: Python version to be passed to actions/setup-python
     required: false
+outputs:
+  github-token:
+    description: If GITHUB_APP_ID and GITHUB_APP_PK are set, the Installation Access Token. Otherwise, the Default GitHub Token
+    value: ${{ steps.github-token.outputs.token }}
 runs:
   using: composite
   steps:
@@ -75,3 +79,8 @@ runs:
     if: inputs.setup-python
     with:
       python-version: ${{ inputs.setup-python }}
+
+  - name: Export GitHub Token
+    id: github-token
+    run: echo "::set-output name=token::${{ steps.iat.outputs.instl-token || github.token }}"
+    shell: bash
