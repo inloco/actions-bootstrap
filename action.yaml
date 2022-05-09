@@ -43,6 +43,11 @@ runs:
       app-id: ${{ env.GITHUB_APP_ID }}
       app-pk: ${{ env.GITHUB_APP_PK }}
 
+  - name: Setup Access to Incognia's Private Repositories
+    if: steps.iat.outputs.instl-token
+    run: sudo git config --system url."https://x-access-token:${{ steps.iat.outputs.instl-token }}@github.com/inloco".insteadOf "https://github.com/inloco"
+    shell: bash
+
   - name: Checkout Code with Submodules
     uses: actions/checkout@v2
     if: steps.iat.outputs.instl-token
