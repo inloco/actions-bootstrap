@@ -70,7 +70,7 @@ runs:
       with:
         node-version: ${{ inputs.setup-node }}
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v3
       if: inputs.setup-python
       with:
         python-version: ${{ inputs.setup-python }}
