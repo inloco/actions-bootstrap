@@ -23,66 +23,54 @@ inputs:
 runs:
   using: composite
   steps:
-  - name: Export environment and mask secret variables
-    uses: inloco/actions-env-context@HEAD
-    with:
-      mask: ${{ inputs.mask }}
-
-  - name: Install packages
-    shell: bash
-    if: inputs.install-packages
-    run: |
-      sudo apt-get update
-      sudo apt-get install -y ${{ inputs.install-packages }}
-
-  - name: Installation Access Token
-    id: iat
-    uses: inloco/actions-githubapp-installationaccesstoken@HEAD
-    if: env.GITHUB_APP_ID && env.GITHUB_APP_PK
-    with:
-      app-id: ${{ env.GITHUB_APP_ID }}
-      app-pk: ${{ env.GITHUB_APP_PK }}
-
-  - name: Setup Access to Incognia's Private Repositories
-    if: steps.iat.outputs.instl-token
-    run: sudo git config --system url."https://x-access-token:${{ steps.iat.outputs.instl-token }}@github.com/inloco".insteadOf "https://github.com/inloco"
-    shell: bash
-
-  - name: Checkout Code with Submodules
-    uses: actions/checkout@v2
-    if: steps.iat.outputs.instl-token
-    with:
-      fetch-depth: 0
-      submodules: recursive
-      token: ${{ steps.iat.outputs.instl-token }}
-
-  - name: Checkout Code without Submodules
-    uses: actions/checkout@v2
-    if: '! steps.iat.outputs.instl-token'
-    with:
-      fetch-depth: 0
-      token: ${{ github.token }}
-
-  - name: Setup Go
-    uses: inloco/actions-setup-go@HEAD
-    if: inputs.setup-go
-    with:
-      go-version: ${{ inputs.setup-go }}
-
-  - name: Setup Java
-    uses: inloco/actions-setup-java@HEAD
-    if: inputs.setup-java
-    with:
-      java-version: ${{ inputs.setup-java }}
-
-  - name: Setup Node
-    uses: inloco/actions-setup-node@HEAD
-    if: inputs.setup-node
-    with:
-      node-version: ${{ inputs.setup-node }}
-
-  - name: Setup Python
-    uses: actions/setup-python@v2
-    if: inputs.setup-python
-    with:
-      python-version: ${{ inputs.setup-python }}
+    - name: Export Environment Context and Mask Secrets
+      uses: inloco/actions-env-context@HEAD
+      with:
+        mask: ${{ inputs.mask }}
+    - name: Generate Installation Access Token
+      id: iat
+      uses: inloco/actions-githubapp-installationaccesstoken@HEAD
+      if: env.GITHUB_APP_ID && env.GITHUB_APP_PK
+      with:
+        app-id: ${{ env.GITHUB_APP_ID }}
+        app-pk: ${{ env.GITHUB_APP_PK }}
+    - name: Log Into GitHub CLI
+      if: steps.iat.outputs.instl-token
+      shell: bash
+      run: gh auth login --with-token <<< ${{ steps.iat.outputs.instl-token || github.token }}
+    - name: Configure Clone with IAT
+      if: steps.iat.outputs.instl-token
+      shell: bash
+      run: sudo git config --system url."https://x-access-token:${{ steps.iat.outputs.instl-token }}@github.com/".insteadOf 'https://github.com/'
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        submodules: ${{ steps.iat.outputs.instl-token && 'recursive' || 'false' }}
+        token: ${{ steps.iat.outputs.instl-token || github.token }}
+    - name: Install Packages
+      if: inputs.install-packages
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ${{ inputs.install-packages }}
+    - name: Setup Go
+      uses: inloco/actions-setup-go@HEAD
+      if: inputs.setup-go
+      with:
+        go-version: ${{ inputs.setup-go }}
+    - name: Setup Java
+      uses: inloco/actions-setup-java@HEAD
+      if: inputs.setup-java
+      with:
+        java-version: ${{ inputs.setup-java }}
+    - name: Setup Node
+      uses: inloco/actions-setup-node@HEAD
+      if: inputs.setup-node
+      with:
+        node-version: ${{ inputs.setup-node }}
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      if: inputs.setup-python
+      with:
+        python-version: ${{ inputs.setup-python }}
