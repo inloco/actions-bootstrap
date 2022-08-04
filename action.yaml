@@ -35,7 +35,6 @@ runs:
         app-id: ${{ env.GITHUB_APP_ID }}
         app-pk: ${{ env.GITHUB_APP_PK }}
     - name: Log Into GitHub CLI
-      if: steps.iat.outputs.instl-token
       shell: bash
       run: gh auth login --with-token <<< ${{ steps.iat.outputs.instl-token || github.token }}
     - name: Configure Clone with IAT
