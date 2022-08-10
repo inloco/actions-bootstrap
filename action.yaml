@@ -53,7 +53,7 @@ runs:
       run: |
         export DEBIAN_FRONTEND=noninteractive
         sudo apt-get update
-        sudo apt-get install -y ${{ inputs.install-packages }}
+        sudo apt-get install --no-install-recommends -y ${{ inputs.install-packages }}
     - name: Setup Go
       uses: inloco/actions-setup-go@HEAD
       if: inputs.setup-go
