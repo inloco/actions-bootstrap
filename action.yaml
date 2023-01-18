@@ -23,6 +23,15 @@ inputs:
 runs:
   using: composite
   steps:
+    # These packages should be installed in macOS basic image for CI
+    # This should be temporary until this setup is done in the macOS CI image
+    - name: Install Basic Packages for macOS
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        brew install gnu-sed
+        echo "$(brew --prefix)/opt/gnu-sed/libexec/gnubin" >> $GITHUB_PATH
+        brew install gh
     - name: Export Environment Context and Mask Secrets
       uses: inloco/actions-env-context@HEAD
       with:
@@ -47,13 +56,18 @@ runs:
         fetch-depth: 0
         submodules: ${{ steps.iat.outputs.instl-token && 'recursive' || 'false' }}
         token: ${{ steps.iat.outputs.instl-token || github.token }}
-    - name: Install Packages
-      if: inputs.install-packages
+    - name: Install Packages (Ubuntu)
+      if: inputs.install-packages && runner.os == 'Linux'
       shell: bash
       run: |
         export DEBIAN_FRONTEND=noninteractive
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y ${{ inputs.install-packages }}
+    - name: Install Packages (macOS)
+      if: inputs.install-packages && runner.os == 'macOS'
+      shell: bash
+      run: |
+        brew install ${{ inputs.install-packages }}
     - name: Setup Go
       uses: inloco/actions-setup-go@HEAD
       if: inputs.setup-go
