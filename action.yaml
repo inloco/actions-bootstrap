@@ -2,6 +2,10 @@ name: Bootstrap
 description: Bootstrap workflow setup for organization repositories
 author: Incognia
 inputs:
+  checkout:
+    description: Whether to checkout the repository
+    default: true
+    required: false
   install-packages:
     description: Packages to install
     required: false
@@ -52,6 +56,7 @@ runs:
       run: sudo git config --system url."https://x-access-token:${{ steps.iat.outputs.instl-token }}@github.com/".insteadOf 'https://github.com/'
     - name: Checkout Code
       uses: actions/checkout@v3
+      if: inputs.checkout
       with:
         fetch-depth: 0
         submodules: ${{ steps.iat.outputs.instl-token && 'recursive' || 'false' }}
