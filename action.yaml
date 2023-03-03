@@ -101,4 +101,3 @@ runs:
       if: inputs.setup-ruby
       with:
         ruby-version: ${{ inputs.setup-ruby }}
-        self-hosted: 'true'
