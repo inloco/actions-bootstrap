@@ -24,6 +24,9 @@ inputs:
   setup-python:
     description: Python version to be passed to actions/setup-python
     required: false
+  setup-ruby:
+    description: Ruby version to be passed to ruby/setup-ruby
+    required: false
 runs:
   using: composite
   steps:
@@ -93,3 +96,8 @@ runs:
       if: inputs.setup-python
       with:
         python-version: ${{ inputs.setup-python }}
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      if: inputs.setup-ruby
+      with:
+        ruby-version: ${{ inputs.setup-ruby }}
