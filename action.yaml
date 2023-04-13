@@ -13,10 +13,10 @@ inputs:
     description: Environment variables to mask
     required: false
   setup-go:
-    description: Go version to be passed to inloco/actions-setup-go
+    description: Go version to be passed to inloco/actions/setup-go
     required: false
   setup-java:
-    description: Java version to be passed to inloco/actions-setup-java
+    description: Java version to be passed to inloco/actions/setup-java
     required: false
   setup-node:
     description: Node version to be passed to actions/setup-node
@@ -40,12 +40,12 @@ runs:
         echo "$(brew --prefix)/opt/gnu-sed/libexec/gnubin" >> $GITHUB_PATH
         brew install gh
     - name: Export Environment Context and Mask Secrets
-      uses: inloco/actions-env-context@HEAD
+      uses: inloco/actions/env-context@HEAD
       with:
         mask: ${{ inputs.mask }}
     - name: Generate Installation Access Token
       id: iat
-      uses: inloco/actions-githubapp-installationaccesstoken@HEAD
+      uses: inloco/actions/githubapp-installationaccesstoken@HEAD
       if: env.GITHUB_APP_ID && env.GITHUB_APP_PK
       with:
         app-id: ${{ env.GITHUB_APP_ID }}
@@ -77,17 +77,17 @@ runs:
       run: |
         brew install ${{ inputs.install-packages }}
     - name: Setup Go
-      uses: inloco/actions-setup-go@HEAD
+      uses: inloco/actions/setup-go@HEAD
       if: inputs.setup-go
       with:
         go-version: ${{ inputs.setup-go }}
     - name: Setup Java
-      uses: inloco/actions-setup-java@HEAD
+      uses: inloco/actions/setup-java@HEAD
       if: inputs.setup-java
       with:
         java-version: ${{ inputs.setup-java }}
     - name: Setup Node
-      uses: inloco/actions-setup-node@HEAD
+      uses: inloco/actions/setup-node@HEAD
       if: inputs.setup-node
       with:
         node-version: ${{ inputs.setup-node }}
